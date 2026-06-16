@@ -1,0 +1,68 @@
+# Redrob Ranker V1 — tunable configuration
+# Only knobs you would realistically sweep live here. Domain vocabularies
+# (titles, skills, companies) are facts about the pool and live in ranker/vocab.py.
+
+# --------------------------------------------------------------------------- #
+# Scoring weights (Stage 3). Each scoring component is normalized to [0, 1];
+# the final score is the weighted sum divided by the sum of weights, so the
+# output is always in [0, 1] regardless of the absolute values you choose here.
+# --------------------------------------------------------------------------- #
+weights:
+  title_fit: 25.0          # is the role identity AI/ML/Search/RecSys?
+  ir_depth: 20.0           # foundational IR skills + ranking/vector + text evidence
+  product_experience: 15.0 # product/AI-company pedigree minus consulting penalty
+  availability: 15.0       # open-to-work, responsive, recently active, low notice
+  assessment_trust: 10.0   # claimed proficiency backed by assessment scores
+  location_fit: 5.0        # Pune/Noida/Hyd/Mumbai/Delhi-NCR/Blr or relocatable
+  experience_fit: 5.0      # closeness to the 5-9 year band
+  github_signal: 5.0       # external-validation / OSS signal
+
+# --------------------------------------------------------------------------- #
+# Honeypot detector (Stage 1). All three vetoes are hard exclusions.
+# --------------------------------------------------------------------------- #
+honeypot:
+  # Reference "today" for elapsed-time math. "auto" = max(last_active_date) seen
+  # in the dataset; or pin an ISO date (e.g. "2026-06-01") for full determinism.
+  reference_date: auto
+  # Veto A: a role's duration_months may exceed elapsed-since-start by at most
+  # this many months (slack for rounding) before it is judged impossible.
+  tenure_slack_months: 2
+  # Veto C: total summed career months may exceed years_of_experience * 12 by at
+  # most this buffer before it is judged inconsistent.
+  yoe_excess_buffer_months: 36
+
+# --------------------------------------------------------------------------- #
+# Scoring thresholds / shape parameters.
+# --------------------------------------------------------------------------- #
+scoring:
+  experience_band: [5.0, 9.0]      # JD target band (soft)
+  experience_decay_years: 6.0      # years outside band to reach experience_fit=0
+  ir_depth_cap: 12.0               # raw IR points that saturate ir_depth at 1.0
+  recency_window_days: 180.0       # days since last_active mapping to recency 0..1
+  notice_period_cap_days: 120.0    # notice_period mapping to 0..1 (lower better)
+  assessment_high_threshold: 60.0  # score >= this corroborates advanced/expert
+  assessment_low_threshold: 25.0   # score < this contradicts advanced/expert
+  response_rate_floor: 0.40        # below this is treated as "unavailable"-ish
+  # Soft keyword-stuffer modifier (NOT a hard veto): multiply final score by this
+  # when the dabbler summary template or >=N contradicted skills are present.
+  stuffer_penalty: 0.60
+  stuffer_low_score_trigger: 3     # advanced-but-low-scored skills that trigger it
+
+# --------------------------------------------------------------------------- #
+# Output (Stage 5).
+# --------------------------------------------------------------------------- #
+output:
+  top_n: 100
+  score_decimals: 6
+
+# --------------------------------------------------------------------------- #
+# V2 retrieval-augmentation layer (additive; V1 above is untouched).
+# The semantic component contributes semantic_weight / (100 + semantic_weight)
+# of the final score — keep it 5-10% so V1 stays dominant.
+# --------------------------------------------------------------------------- #
+v2:
+  semantic_weight: 8.0          # 8/108 ~= 7.4% influence
+  retrieval_top_k: 1000
+  embedding_backend: auto       # auto | st | hashing  (auto: ST if installed, else hashing)
+  cache_dir: .cache_embeddings
+  batch_size: 256

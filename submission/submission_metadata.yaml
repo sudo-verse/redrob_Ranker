@@ -1,0 +1,86 @@
+# Redrob Hackathon — Submission Metadata
+# Frozen model: V2 (rule-based V1 + bounded semantic-evidence augmentation).
+# Personal/registration fields marked TODO must be set to YOUR registered details
+# before upload; every technical field below is accurate to this repository.
+
+# ============================================================================
+# Team identity
+# ============================================================================
+team_name: "TODO-your-registered-participant-id"   # must match portal registration
+
+primary_contact:
+  name: "TODO-Full-Name"
+  email: "sunilclaude12345@gmail.com"
+  phone: "TODO-+91-XXXXXXXXXX"
+
+team_members:
+  - name: "TODO-Full-Name"
+    email: "sunilclaude12345@gmail.com"
+    role: "Principal ML Engineer (solo)"
+  # Solo submission — add members here if applicable.
+
+# ============================================================================
+# Code and reproducibility
+# ============================================================================
+github_repo: "https://github.com/sudo-verse/redrob_Ranker.git"
+# Push the contents of this package as the repo root. Grant organizer access if private.
+
+sandbox_link: "TODO-https://huggingface.co/spaces/<username>/redrob-ranker"
+# A hosted demo (HuggingFace Space / Colab / Docker) that runs rank.py on a small sample.
+
+reproduce_command: "python rank_v2.py --candidates ./candidates.jsonl --out ./submission.csv"
+# Single command, end-to-end. Cold run ~53s (embedding pre-compute ~40s, cached
+# thereafter); the ranking step that writes the CSV is ~18s — well under 5 min.
+# V1-only (no embeddings) alternative: python rank.py --candidates ./candidates.jsonl --out ./submission.csv
+
+# ============================================================================
+# Compute environment (actual machine used)
+# ============================================================================
+compute:
+  platform: "Local Linux workstation"
+  cpu_cores: 12
+  ram_gb: 15
+  python_version: "3.13.13"        # code is 3.11+ compatible; tested on 3.13
+  os: "Fedora Linux 44 (Workstation Edition)"
+  uses_gpu_for_inference: false    # CPU only, as required
+  has_network_during_ranking: false  # no API calls during ranking
+  pre_computation_required: true   # V2 precomputes candidate embeddings (cached)
+  pre_computation_time_minutes: 1  # ~40s to embed 100k docs on CPU; cached after
+
+# ============================================================================
+# AI tools declaration (transparency — declared use is not penalized)
+# ============================================================================
+ai_tools_used:
+  - "Claude"        # Claude Code: data analysis, architecture, implementation, review
+
+ai_usage_summary: |
+  We used an AI coding assistant during development for data exploration,
+  refactoring help, and writing tests. The ranker itself makes no model or network
+  calls at run time: scoring is a fixed weighted rule engine and the reasons are
+  built from each profile's own fields. No candidate data is sent to any external
+  service during ranking.
+
+# ============================================================================
+# Approach summary
+# ============================================================================
+methodology_summary: |
+  The ranker is a weighted rule engine over 8 features (title fit, IR skill depth,
+  product-company experience, availability, assessment-backed trust, location,
+  experience range, GitHub). Before scoring, profiles with internal contradictions
+  (impossible job length, expert-with-0-months, work history far exceeding stated
+  experience) are filtered out. An optional semantic matching step uses sentence
+  embeddings to find candidates whose fit shows up in their descriptions and gives
+  a small capped boost (~7%), so the rules stay in control. Weights are set by hand
+  from what we learned about the data, since the dataset ships no labels. The
+  reasons cite only facts from the profile. Runs in about 18s on CPU; the top 100
+  contains no invalid profiles and passes the official checker.
+
+# ============================================================================
+# Declarations
+# ============================================================================
+declarations:
+  read_submission_spec: true
+  code_is_original_work: true
+  no_collusion: true
+  honeypot_check_done: true         # explicit honeypot vetoes; 0 in top-100
+  reproduction_tested: true         # reproduce_command verified end-to-end

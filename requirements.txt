@@ -1,0 +1,14 @@
+# Redrob Ranker — runtime dependencies. No GPU/LLM/network deps at ranking time.
+PyYAML>=6.0
+
+# V2 retrieval-augmentation layer:
+numpy>=1.24
+scikit-learn>=1.3        # offline hashing-tfidf fallback embedding backend
+
+# Optional production embedding backend (Stage A). The pipeline auto-detects it;
+# without it, V2 falls back to the offline hashing backend.
+# sentence-transformers>=2.2,<4
+# torch                  # CPU build is sufficient
+
+# Tests use the standard-library `unittest` runner, so no test deps are required.
+# (pytest is optional; `python -m unittest` works out of the box.)

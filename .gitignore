@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Generated at run time
+/submission.csv
+/submission_v2.csv
+.cache_embeddings/
+
+# Dataset (not committed; download from the challenge bundle)
+candidates.jsonl
+candidates.jsonl.gz
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
