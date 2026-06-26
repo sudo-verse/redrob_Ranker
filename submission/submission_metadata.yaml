@@ -1,37 +1,37 @@
 # Redrob Hackathon — Submission Metadata
 # Frozen model: V2 (rule-based V1 + bounded semantic-evidence augmentation).
-# Personal/registration fields marked TODO must be set to YOUR registered details
-# before upload; every technical field below is accurate to this repository.
+# Every technical field below is accurate to this repository.
 
 # ============================================================================
 # Team identity
 # ============================================================================
-team_name: "TODO-your-registered-participant-id"   # must match portal registration
+team_name: "SudoVerse"            # must exactly match your portal registration
 
 primary_contact:
-  name: "TODO-Full-Name"
-  email: "sunilclaude12345@gmail.com"
-  phone: "TODO-+91-XXXXXXXXXX"
+  name: "Devashish Gupta"         # team leader
+  email: "ashishkrgupta.hajipur@gmail.com"
+  phone: "+91-7781968897"
 
 team_members:
-  - name: "TODO-Full-Name"
-    email: "sunilclaude12345@gmail.com"
-    role: "Principal ML Engineer (solo)"
-  # Solo submission — add members here if applicable.
+  - name: "Mohit Kumar Lalwani"
+    email: "mohitlalwani639@gmail.com"
+  - name: "Arkaprovo Mukherjee"
+    email: "arkaprovomukherjee2005@gmail.com"
+  - name: "Ronit Raj"
+    email: "itzronit2211@gmail.com"
 
 # ============================================================================
 # Code and reproducibility
 # ============================================================================
 github_repo: "https://github.com/sudo-verse/redrob_Ranker.git"
-# Push the contents of this package as the repo root. Grant organizer access if private.
-
-sandbox_link: "TODO-https://huggingface.co/spaces/<username>/redrob-ranker"
-# A hosted demo (HuggingFace Space / Colab / Docker) that runs rank.py on a small sample.
+# Push the contents of this package as the repo root. Keep it public for judging.
 
 reproduce_command: "python rank_v2.py --candidates ./candidates.jsonl --out ./submission.csv"
 # Single command, end-to-end. Cold run ~53s (embedding pre-compute ~40s, cached
 # thereafter); the ranking step that writes the CSV is ~18s — well under 5 min.
 # V1-only (no embeddings) alternative: python rank.py --candidates ./candidates.jsonl --out ./submission.csv
+# The portal expects XLSX; convert the CSV before upload:
+#   python make_xlsx.py --in ./submission.csv --out ./submission.xlsx
 
 # ============================================================================
 # Compute environment (actual machine used)
@@ -51,7 +51,7 @@ compute:
 # AI tools declaration (transparency — declared use is not penalized)
 # ============================================================================
 ai_tools_used:
-  - "Claude"        # Claude Code: data analysis, architecture, implementation, review
+  - "Claude"        # data analysis, architecture, implementation, review
 
 ai_usage_summary: |
   We used an AI coding assistant during development for data exploration,
